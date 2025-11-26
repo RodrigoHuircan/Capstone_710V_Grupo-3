@@ -1,0 +1,76 @@
+<ion-content [fullscreen]="true">
+
+  <div class="login-container">
+
+    <ion-thumbnail>
+      <ion-img src="assets/img/logo_ashbis.jpeg"></ion-img>
+    </ion-thumbnail>
+
+    <h1 class="titulo">¡Bienvenido!</h1>
+
+    <form [formGroup]="datosForm" (ngSubmit)="login()">
+
+      <!-- Email -->
+      <ion-item lines="none">
+        <ion-label position="stacked">Email</ion-label>
+        <ion-input
+          type="email"
+          formControlName="email">
+        </ion-input>
+      </ion-item>
+
+      <!-- Errores Email -->
+      <ion-text color="danger" *ngIf="email.invalid && (email.dirty || email.touched)">
+        <p *ngIf="email.errors?.['required']">El email es obligatorio.</p>
+        <p *ngIf="email.errors?.['email']">Debe ser un correo válido.</p>
+      </ion-text>
+
+      <!-- Password -->
+      <ion-item lines="none">
+        <ion-label position="stacked">Contraseña</ion-label>
+
+        <ion-input
+          [type]="showPass ? 'text' : 'password'"
+          formControlName="password">
+        </ion-input>
+
+        <ion-button fill="clear" slot="end" (click)="showPass = !showPass">
+          <ion-icon [name]="showPass ? 'eye-off' : 'eye'"></ion-icon>
+        </ion-button>
+      </ion-item>
+
+      <!-- Errores Password -->
+      <ion-text color="danger" *ngIf="password.invalid && (password.dirty || password.touched)">
+        <p *ngIf="password.errors?.['required']">La contraseña es obligatoria.</p>
+        <p *ngIf="password.errors?.['minlength']">Debe tener al menos 6 caracteres.</p>
+      </ion-text>
+
+      <!-- ERROR LOGIN BACKEND -->
+      <ion-text color="danger" *ngIf="loginError">
+        <p>{{ loginError }}</p>
+      </ion-text>
+
+      <!-- Botón ingresar -->
+      <ion-button type="submit" color="danger" expand="block">
+        INGRESAR
+      </ion-button>
+
+      <ion-button fill="clear" class="btn-olvido">
+        Olvidé mi contraseña
+      </ion-button>
+
+      <ion-button color="medium" expand="block" (click)="irARegistro()">
+        CREAR
+      </ion-button>
+
+      <small>¿No tienes una cuenta?</small>
+
+    </form>
+
+    <ion-button class="enlace" fill="clear" href="https://www.ashbis.com">
+      www.ashbis.com
+    </ion-button>
+
+  </div>
+
+</ion-content>

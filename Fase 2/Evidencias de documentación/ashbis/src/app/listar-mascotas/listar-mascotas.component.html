@@ -1,0 +1,62 @@
+<ion-header translucent="true">
+  <ion-toolbar>
+    <ion-title>Mis Mascotas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Loading -->
+  <ion-list *ngIf="loading(); else loaded">
+    <ion-item *ngFor="let i of [1,2,3]">
+      <ion-avatar slot="start">
+        <ion-skeleton-text animated style="width:40px;height:40px;"></ion-skeleton-text>
+      </ion-avatar>
+      <ion-label>
+        <h3><ion-skeleton-text animated style="width:60%"></ion-skeleton-text></h3>
+        <p><ion-skeleton-text animated style="width:40%"></ion-skeleton-text></p>
+      </ion-label>
+      <ion-button slot="end" size="small" fill="outline" color="danger" disabled>Ver perfil</ion-button>
+    </ion-item>
+  </ion-list>
+
+  <!-- Data -->
+  <ng-template #loaded>
+    <ng-container *ngIf="mascotas().length > 0; else empty">
+      <ion-list>
+        <ion-item *ngFor="let m of mascotas(); trackBy: trackById">
+        <ion-avatar slot="start">
+          <img [src]="m.fotoUrl || 'assets/img/logo_ashbis.jpeg'" alt="foto" />
+        </ion-avatar>
+
+        <ion-label>
+          <h2 class="ion-text-wrap">{{ m.nombre }}</h2>
+          <p class="ion-text-wrap">{{ m.especie }} • {{ m.raza || '—' }}</p>
+        </ion-label>
+
+        <!-- Botón VER PERFIL -->
+        <ion-button
+          slot="end"
+          size="small"
+          color="danger"
+          (click)="goPerfil(m)"
+        >
+          Ver perfil
+        </ion-button>
+      </ion-item>
+      </ion-list>
+    </ng-container>
+
+    <ng-template #empty>
+      <ion-item lines="none">
+        <ion-label>
+          <h2>Sin mascotas registradas</h2>
+          <p>Usa “Agregar Mascota” para crear tu primera ficha.</p>
+        </ion-label>
+      </ion-item>
+    </ng-template>
+  </ng-template>
+</ion-content>

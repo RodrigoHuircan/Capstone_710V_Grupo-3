@@ -1,0 +1,7 @@
+{
+  "name": "ashbis",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

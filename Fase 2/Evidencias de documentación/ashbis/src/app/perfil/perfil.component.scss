@@ -1,0 +1,56 @@
+.sidebar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 5vh;
+  margin-top: 5vh;
+}
+
+.photo-card {
+  --background: #161a20;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  border: 1px solid #242a33;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+}
+
+  .logo {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #222938;
+    outline: 4px solid rgba(138, 163, 255, 0.12);
+    background: #0f1319;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 12px rgba(138, 163, 255, 0.25);
+    }
+  }
+  .btn-cerrar {
+  --background: transparent;       
+  --color: #ffffff;                
+  --border-color: #8b0808;         
+  --border-width: 2px;
+  --border-style: solid;
+  --padding-top: 6px;
+  --padding-bottom: 6px;
+  --padding-start: 10px;
+  --padding-end: 10px;
+  width: 160px;                   
+  margin: 25px auto;               
+  display: block;
+  border-radius: 10px;
+}
+
+.btn-cerrar:hover {
+  --background: #8b080862; 
+}

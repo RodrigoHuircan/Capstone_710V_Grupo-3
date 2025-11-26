@@ -1,0 +1,98 @@
+<ion-content class="ion-padding">
+
+  <!-- 1. Estado de Carga -->
+  <div *ngIf="cargando" class="ion-text-center ion-padding-top">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Generando QR...</p>
+  </div>
+
+  <!-- 2. Contenido principal (cuando no está cargando) -->
+  <div *ngIf="!cargando">
+
+    <!-- 2A. El Código QR (Si hay datos) -->
+    <!--
+      Añadimos el 'id' para que jspdf/html2canvas lo encuentre.
+      Añadimos #qrContainer para @ViewChild (aunque ya no se use para PDF, es buena práctica)
+    -->
+    <ion-card *ngIf="qrData" class="ion-text-center ion-padding" #qrContainer id="qrCardElement">
+      <ion-card-header>
+        <ion-card-title>¡QR Listo!</ion-card-title>
+        <ion-card-subtitle>Escanea este código</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content class="qr-container">
+        <!--
+          Wrapper para ayudar a la función de 'compartir' a encontrar el canvas.
+        -->
+        <div class="qr-code-wrapper">
+          <qrcode
+            [qrdata]="qrData"
+            [width]="256"
+            elementType="canvas"
+            errorCorrectionLevel="M">
+          </qrcode>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- 2B. Botones de Acción (Si hay QR) -->
+    <div *ngIf="qrData" class="ion-padding-horizontal ion-text-center">
+
+      <!-- Botón de Descargar PDF -->
+      <ion-button
+        expand="block"
+        (click)="descargarPDF()"
+        [disabled]="descargandoPDF"
+        color="danger">
+        <ion-icon name="document-text-outline" slot="start"></ion-icon>
+        <ion-spinner *ngIf="descargandoPDF" name="crescent" slot="start"></ion-spinner>
+        {{ descargandoPDF ? 'Generando...' : 'Descargar PDF' }}
+      </ion-button>
+
+      <!-- Botón de Compartir (Solo aparece si el navegador puede) -->
+      <ion-button
+        color="danger"
+        *ngIf="canShare"
+        expand="block"
+        fill="outline"
+        (click)="compartirQR()"
+        [disabled]="compartiendo"
+        class="ion-margin-top">
+        <ion-icon name="share-outline" slot="start"></ion-icon>
+        <ion-spinner *ngIf="compartiendo" name="crescent" slot="start"></ion-spinner>
+        {{ compartiendo ? 'Compartiendo...' : 'Compartir QR' }}
+      </ion-button>
+    </div>
+
+
+    <!-- 2C. Advertencia (Si faltan datos) -->
+    <ion-card *ngIf="!cargando && !qrData" color="warning">
+      <ion-card-header>
+        <ion-card-title>Faltan Datos</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>No se pudo generar el código QR.</p>
+        <p>Por favor, asegúrate de tener al menos un **nombre** y un **teléfono** guardados en tu perfil.</p>
+
+        <!-- Botón para ir a editar el perfil (usa RouterLink) -->
+        <ion-button
+          fill="outline"
+          color="dark"
+          class="ion-margin-top"
+          [routerLink]="['/tabs/perfil']">
+          <ion-icon name="person-outline" slot="start"></ion-icon>
+          Editar Perfil
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Instrucciones -->
+    <ion-card *ngIf="!cargando && qrData">
+       <ion-card-content>
+        <p class="ion-text-center">Si alguien encuentra a tu mascota, puede escanear este código para contactarte.</p>
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+
+</ion-content>

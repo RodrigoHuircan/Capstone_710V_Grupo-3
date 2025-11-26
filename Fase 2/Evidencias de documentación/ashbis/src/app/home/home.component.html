@@ -1,0 +1,126 @@
+<ion-header>
+  <ion-toolbar class="header-menu">
+    <img src="assets/img/ashbis.png" alt="Logo Ashbis" class="logo-header">
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+
+  <div class="carrusel-container">
+    <swiper-container
+      slides-per-view="1"
+      pagination="true"
+      autoplay-delay="3500"
+      autoplay-disable-on-interaction="false"
+      loop="true"
+    >
+      <swiper-slide *ngFor="let img of imagenesCarrusel">
+        <div class="slide-content">
+          <img [src]="img.src" [alt]="img.titulo" />
+        </div>
+      </swiper-slide>
+    </swiper-container>
+  </div>
+
+    <div class="ion-text-center ion-margin-top">
+      <ion-button expand="block" color="danger" shape="round" (click)="irAlChatIA()">
+        <ion-icon name="chatbubbles-outline" slot="start"></ion-icon>
+        Chat con IA
+      </ion-button>
+    </div>
+  <ion-card class="map-card-container ion-no-margin">
+
+  <h2 class="map-title ion-text-center">Lugares para Mascotas</h2>
+
+  
+  <div class="button-row">
+      <ion-button
+        class="btn-big"
+        (click)="findPlacesAction('veterinary_care')"
+        color="danger"
+        [disabled]="estaCargando"
+        shape="round"
+        fill="solid"
+      >
+        <ion-icon
+          [name]="estaCargando && currentSearchType === 'veterinary_care' ? 'hourglass-outline' : 'locate-outline'"
+          slot="start"
+          [ngClass]="{'spin-animation': estaCargando && currentSearchType === 'veterinary_care'}"
+        ></ion-icon>
+        Veterinaria
+      </ion-button>
+
+      <ion-button
+        class="btn-big btn-outline"
+        (click)="findPlacesAction('pet_store')"
+        [disabled]="estaCargando"
+        shape="round"
+        fill="outline"
+      >
+        <ion-icon
+          [name]="estaCargando && currentSearchType === 'pet_store' ? 'hourglass-outline' : 'bag-outline'"
+          slot="start"
+          [ngClass]="{'spin-animation': estaCargando && currentSearchType === 'pet_store'}"
+        ></ion-icon>
+        Tienda
+      </ion-button>
+    </div>
+    <ion-card-content>
+      <div class="map-container">
+        <google-map
+          height="500px"
+          width="100%"
+          [zoom]="mapOptions.zoom"
+          [center]="center"
+          [options]="mapOptions"
+        >
+          <map-marker
+            *ngIf="userPositionMarker"
+            [position]="userPositionMarker"
+            [options]="userMarkerOptions"
+          ></map-marker>
+
+          <map-marker
+            *ngFor="let marcador of marcadoresEnMapa"
+            [position]="marcador.position"
+            [options]="marcador.options"
+            [title]="marcador.title"
+            (mapClick)="openInfoWindow(marcadorRef, marcador)"
+            #marcadorRef="mapMarker"
+          ></map-marker>
+
+          <map-info-window>
+            <div *ngIf="marcadorSeleccionado" class="p-2">
+              <h2 class="font-bold text-lg mb-1">{{ marcadorSeleccionado.title }}</h2>
+              <p class="text-sm text-gray-700">
+                Dirección: {{ marcadorSeleccionado.address }}
+              </p>
+              <p *ngIf="marcadorSeleccionado.rating" class="text-xs text-yellow-600 mt-1 flex items-center">
+                Puntuación: <strong>{{ marcadorSeleccionado.rating }}</strong>
+                <ion-icon name="star"></ion-icon>
+              </p>
+                  <div class="ion-text-right ion-margin-top">
+                    <ion-button size="small" color="danger" shape="round" (click)="guardarVeterinariaFavorita()">
+                      <ion-icon name="heart-outline" slot="start"></ion-icon>
+                      Favorita
+                    </ion-button>
+                  </div>
+            </div>
+          </map-info-window>
+        </google-map>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <p
+    *ngIf="!estaCargando && marcadoresEnMapa.length === 0"
+    class="ion-text-center ion-margin-top text-gray-600 p-2"
+  >
+    {{
+      userPositionMarker
+        ? 'No se encontraron lugares en 5km a la redonda.'
+        : 'Haz clic en un botón para cargar tu ubicación y buscar lugares cercanos.'
+    }}
+  </p>
+
+</ion-content>
